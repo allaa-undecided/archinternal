@@ -109,6 +109,9 @@ html, body {
     border-bottom: 1px solid #f1c40f;
   }
 
+  .table-row td {
+    color: #fff;
+  }
   #registers-table{
     width: 100%;
     margin: 0 auto;
@@ -214,3 +217,33 @@ html, body {
   }
 
   
+
+#table{
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid #f1c40f;
+  border-radius: 0.6em;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  
+}
+
+.table{
+  width: 100%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 1px solid #f1c40f;
+  border-radius: 0.6em;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.table th, .table td {
+  padding: 12px 15px;
+  text-align: center;
+  margin: 20px;
+  color: #fff;
+}
+

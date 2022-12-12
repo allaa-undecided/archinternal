@@ -22,7 +22,8 @@ The simulator supports LW, SW, MUL, add, addi, Beq, jal, return,NEG,NOR instruct
 function generateTable(instructions) {
   const table = document.getElementById("table");
   table.innerHTML = "";
-  table.className = "table-auto";
+  table.className = "table-auto result-table text-xl";
+  table.id="table";
   const tableBody = document.createElement("tbody");
   tableBody.id = "table-body";
   table.appendChild(tableBody);
@@ -30,8 +31,10 @@ function generateTable(instructions) {
   tableBody.appendChild(tableHeader);
   const instructionHeader = document.createElement("th");
   instructionHeader.innerHTML = "Instruction";
+  const PCHeader = document.createElement("th");
+  PCHeader.innerHTML = "PC";
   tableHeader.appendChild(instructionHeader);
-  const issueHeader = document.createElement("th");
+  const issueHeader = document.createElement("th");  
   issueHeader.innerHTML = "Issue";
   tableHeader.appendChild(issueHeader);
   const executeHeader = document.createElement("th");
@@ -42,10 +45,11 @@ function generateTable(instructions) {
   tableHeader.appendChild(executeEndHeader);
 
   const writeHeader = document.createElement("th");
-  writeHeader.innerHTML = "Writesss";
+  writeHeader.innerHTML = "Writes";
   tableHeader.appendChild(writeHeader);
   instructions.forEach((instruction) => {
     const row = document.createElement("tr");
+    row.className = "table-row";
     tableBody.appendChild(row);
     const instructionCell = document.createElement("td");
     instructionCell.innerHTML = instruction.op;
@@ -77,21 +81,24 @@ function generateTable(instructions) {
   const registerHeader = document.createElement("th");
   registerHeader.innerHTML = "Register";
   registersTableHeader.appendChild(registerHeader);
-  const valueHeader = document.createElement("th");
-  valueHeader.innerHTML = "Value";
-  registersTableHeader.appendChild(valueHeader);
-  for (let i = 0; i < 8; i++) {
-    const row = document.createElement("tr");
-    registersTableBody.appendChild(row);
-    const registerCell = document.createElement("td");
-    registerCell.innerHTML = `R${i}`;
-    row.appendChild(registerCell);
-    const valueCell = document.createElement("td");
-    valueCell.innerHTML = RF.registers[`R${i}`].value;
-    row.appendChild(valueCell);
+  for(let i=0;i<8;i++){
+    const R= document.createElement("td");
+    R.innerHTML = "R"+i;
+    registersTableHeader.appendChild(R);
+  }
+  const registersRow = document.createElement("tr");
+  registersTableBody.appendChild(registersRow);
+  const registerValueHeader = document.createElement("th");
+  registerValueHeader.innerHTML = "Value";
+  registersRow.appendChild(registerValueHeader);
+
+  for(let i=0;i<8;i++){
+    const R= document.createElement("td");
+    R.innerHTML = RF.registers[`R${i}`].value;
+    registersRow.appendChild(R);
   }
 
-  console.log(RF.registers);
+  
 }
 
 
@@ -117,6 +124,7 @@ function generateMemoryTable() {
   tableHeader.appendChild(valueHeader);
   for (let i = 0; i < 20; i++) {
     const row = document.createElement("tr");
+    row.className = "table-row";
     tableBody.appendChild(row);
     const addressCell = document.createElement("td");
     addressCell.innerHTML = i;
