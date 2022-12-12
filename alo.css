@@ -54,13 +54,11 @@ html, body {
     font-weight: 400;
     line-height: 1;
     margin: 20px;
-    padding: 1.2em 2.8em;
-    text-decoration: none;
+    padding: 1.2em 2.8em;    text-decoration: none;
     text-align: center;
     text-transform: uppercase;
     font-weight: 700;
   }
-
   button.btn-primary:hover, button.btn-primary:focus {
     color: #fff;
     outline: 0;

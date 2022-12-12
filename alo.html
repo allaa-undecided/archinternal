@@ -3,7 +3,14 @@
   <link rel="stylesheet" href="alo.css" >
   <script src="alo.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src= "main.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="instruction.js"></script>
+    <script src="register.js"></script>
+    <script src="memory.js"></script>
+    <script src="parser.js"></script>
+    <script src="reservationStations.js"></script>
+    <script src="global.js"></script>
+    <script src="main.js"></script>
 
   </head>
 <h1 class="text-7xl	mt-10 font-mono ">Tomasulo Algorithm Simulation</h1>
@@ -19,10 +26,7 @@
 <textarea id="code" rows="4"
  class="block p-2.5 w-full text-3xl text-gray-900 bg-gray-50 rounded-lg border border-gray-300 
  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-  dark:focus:ring-blue-500 dark:focus:border-blue-500 h-96" placeholder="Write your code here...">
-LW x0, x0, x1
-SW x0, x0,   x1
-LW x0, x0,  x1
+  dark:focus:ring-blue-500 dark:focus:border-blue-500 h-96" placeholder="Write your code here...">ADDI R1, R0, 5
 </textarea>
 <button class="btn btn-primary text-xl" onclick="start()">Submit!</button> 
 </div>
@@ -38,30 +42,79 @@ LW x0, x0,  x1
         <th class="px-4 py-2">Write Result</th>
       </tr>
     </thead>
-    <tbody>
+
+    <!-- put empty table with 3 rows -->
+    <tbody id="table-body">
       <tr>
-        <td class="border px-4 py-2">LW x0, x0, x1</td>
-        <td class="border px-4 py-2">1</td>
-        <td class="border px-4 py-2">2</td>
-        <td class="border px-4 py-2">3</td>
-        <td class="border px-4 py-2">4</td>
-      </tr>
-      <tr class="bg-gray-100">
-        <td class="border px-4 py-2">SW x0, x0, x1</td>
-        <td class="border px-4 py-2">1</td>
-        <td class="border px-4 py-2">2</td>
-        <td class="border px-4 py-2">3</td>
-        <td class="border px-4 py-2">4</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
       </tr>
       <tr>
-        <td class="border px-4 py-2">LW x0, x0, x1</td>
-        <td class="border px-4 py-2">1</td>
-        <td class="border px-4 py-2">2</td>
-        <td class="border px-4 py-2">3</td>
-        <td class="border px-4 py-2">4</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
       </tr>
-    </tbody>
+      <tr>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+        <td class="border px-4 py-2">-</td>
+      </tr>
+
+    </table>
+    <div id="right-bottom">
+      <h2>Registers</h2>
+      <div id="registers">
+        <table>
+          <tr>
+            <th>Register</th>
+            <th>Value</th>
+          </tr>
+          <tr>
+            <td>R0</td>
+            <td id="R0">0</td>
+          </tr>
+          <tr>
+            <td>R1</td>
+            <td id="R1">0</td>
+          </tr>
+          <tr>
+            <td>R2</td>
+            <td id="R2">0</td>
+          </tr>
+          <tr>
+            <td>R3</td>
+            <td id="R3">0</td>
+          </tr>
+          <tr>
+            <td>R4</td>
+            <td id="R4">0</td>
+          </tr>
+          <tr>
+            <td>R5</td>
+            <td id="R5">0</td>
+          </tr>
+          <tr>
+            <td>R6</td>
+            <td id="R6">0</td>
+          </tr>
+    
+          <tr>
+            <td>R7</td>
+            <td id="R7">0</td>
+          </tr>
+        </table>
+      </div>
+    
 
 </div>
+</div>
+
 </div>
 </html>
