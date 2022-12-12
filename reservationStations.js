@@ -284,7 +284,56 @@ const STATIONS_CONFIGS = {
   },
 
   
-  [InstructionType.BEQ]: {},
+  [InstructionType.BEQ]: {
+    type: InstructionType.BEQ,
+
+    issueFn: (rs, inst) => {
+      rs.busy = true;
+      rs.inst = inst;
+      rs.op = inst.type;
+      branchIssued = true;
+      if (rs.inst.issueCycle == null) {
+        rs.inst.issueCycle = clockCycle;
+      }
+
+      if (RF.registers[inst.sourceRegister1].reservationStation == null)
+        rs.vj = RF.registers[inst.sourceRegister1].value;
+      else rs.qj = RF.registers[inst.sourceRegister1].reservationStation;
+
+      if (RF.registers[inst.sourceRegister2].reservationStation == null)
+        rs.vk = RF.registers[inst.sourceRegister2].value;
+      else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
+
+      rs.address = labelToPC[inst.label];
+
+    },
+    shouldExecute: (rs) => {
+      return rs.qj == null && rs.qk == null;
+    },
+
+    executeFn: (rs) => {
+      if (rs.inst.executionStartCycle == null) {
+        rs.inst.executionStartCycle = clockCycle;
+      }
+      rs.clockCycleCounter++;
+      if (rs.clockCycleCounter < executionCycle[rs.inst.op]) return;
+
+      if (rs.inst.executionEndCycle == null) {
+        rs.inst.executionEndCycle = clockCycle;
+        rs.result = rs.vj - rs.vk;
+        if(rs.result == 0)
+          pc = rs.address;
+        
+      branchIssued = false;
+      }
+
+
+   
+    }
+
+    
+
+  },
   [InstructionType.JAL_RET]: {
     type: InstructionType.JAL_RET,
 
@@ -530,6 +579,8 @@ class ReservationStationsTable {
 
   updateStations() {
     for (const type in NUM_OF_STATIONS) {
+      if(type!=InstructionType.BEQ  &&branchIssued)
+        continue;
       for (let i = 0; i < NUM_OF_STATIONS[type]; i++) {
         const station = this.stations[type][i];
         station.update();
