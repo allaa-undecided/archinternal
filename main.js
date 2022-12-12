@@ -185,7 +185,10 @@ class Program {
   }
 
   propgramFinished() {
-    return this.pc >= this.instructions.length && RSTable.isFinished();
+    const PC= pc/4 >= this.instructions.length 
+    const IS_FINISHED= RSTable.isFinished();
+    console.log("PC:",PC,IS_FINISHED);
+    return PC && IS_FINISHED;
   }
 }
 /*
