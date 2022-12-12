@@ -8,3 +8,4 @@ Dec 11, 3:00 PM: Created the functions that kept track of the states: broadcasti
 		Implemented the functions for the neg and nor instructions
 
 Dec 12, 8:25 PM: Implemented the functions for the BEQ instruction 
+		Created the data memory 
