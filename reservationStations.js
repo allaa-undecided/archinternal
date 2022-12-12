@@ -32,11 +32,11 @@ class reservationStation {
   }
 
   update() {
-    console.log(this.busy);
     if (this.isFree()) return;
 
-    if (!this.inst.executed && this.shouldExecute(this)) this.execute(this);
-    else if (!this.inst.written) this.write(this);
+    if (!this.inst.executed) {
+      if (this.shouldExecute(this)) this.execute(this);
+    } else if (!this.inst.written) this.write(this);
   }
 }
 
@@ -109,14 +109,21 @@ const STATIONS_CONFIGS = {
       rs.clockCycleCounter++;
       if (rs.clockCycleCounter < executionCycle[rs.inst.op]) return;
 
-      rs.inst.executionEndCycle = clockCycle;
-      if (rs.inst.opCode == OP_CODES.ADDI) {
-        rs.result = rs.vj + rs.immediate;
-      } else if (rs.inst.opCode == OP_CODES.ADD) {
-        rs.result = rs.vj + rs.vk;
+      if (rs.inst.executionEndCycle == null) {
+        rs.inst.executionEndCycle = clockCycle;
+        if (rs.inst.opCode == OP_CODES.ADDI) {
+          rs.result = rs.vj + rs.immediate;
+        } else if (rs.inst.opCode == OP_CODES.ADD) {
+          rs.result = rs.vj + rs.vk;
+        }
       }
-      rs.inst.executed = true;
-      commonDataBus = { value: rs.result, reservationStation: rs.name };
+  
+
+      if (commonDataBus.reservationStation == null) {
+        rs.inst.executed = true;
+        commonDataBus.value = rs.result;
+        commonDataBus.reservationStation = rs.name;
+      }
     },
     writeFn: (rs) => {
       if (rs.inst.writeCycle == null) rs.inst.writeCycle = clockCycle;
@@ -124,7 +131,6 @@ const STATIONS_CONFIGS = {
       if (
         RF.registers[rs.inst.destinationRegister].reservationStation == rs.name
       ) {
-      
         RF.registers[rs.inst.destinationRegister].value = rs.result;
         RF.registers[rs.inst.destinationRegister].reservationStation = null;
       }
@@ -179,17 +185,24 @@ class ReservationStationsTable {
         station.update();
       }
     }
+    this.broadcast();
   }
 
   broadcast() {
+    if(commonDataBus.reservationStation == null) return;
     for (const type in NUM_OF_STATIONS) {
       for (let i = 0; i < NUM_OF_STATIONS[type]; i++) {
         const station = this.stations[type][i];
         if (station.isFree()) continue;
-        if (station.qj == commonDataBus.reservationStation)
+        if (station.qj == commonDataBus.reservationStation) {
+          console.log("VAL",commonDataBus.value);
           station.vj = commonDataBus.value;
-        if (station.qk == commonDataBus.reservationStation)
+          station.qj = null;
+        }
+        if (station.qk == commonDataBus.reservationStation) {
           station.vk = commonDataBus.value;
+          station.qk = null;
+        }
       }
     }
     commonDataBus.reset();
