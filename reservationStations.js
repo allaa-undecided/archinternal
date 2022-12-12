@@ -43,12 +43,12 @@ class reservationStation {
 const NUM_OF_STATIONS = {
   [InstructionType.LW]: 0,
   [InstructionType.SW]: 0,
-  [InstructionType.MUL]: 0,
+  [InstructionType.MUL]: 1,
   [InstructionType.ADD_ADDI]: 2,
   [InstructionType.BEQ]: 0,
   [InstructionType.JAL_RET]: 0,
-  [InstructionType.NEG]: 0,
-  [InstructionType.NOR]: 0,
+  [InstructionType.NEG]: 1,
+  [InstructionType.NOR]: 1,
 };
 const executionCycle = {
   [InstructionType.LW]: 4,
@@ -57,14 +57,75 @@ const executionCycle = {
   [InstructionType.ADD_ADDI]: 2,
   [InstructionType.BEQ]: 1,
   [InstructionType.JAL_RET]: 1,
-  [InstructionType.NEG]: 1,
+  [InstructionType.NEG]: 3,
   [InstructionType.NOR]: 1,
 };
 
 const STATIONS_CONFIGS = {
   [InstructionType.LW]: {},
   [InstructionType.SW]: {},
-  [InstructionType.MUL]: {},
+  [InstructionType.MUL]: {
+    type: InstructionType.MUL,
+    issueFn: (rs, inst) => {
+      console.log("MUL");
+      rs.busy = true;
+      rs.inst = inst;
+      rs.op = inst.type;
+      if (rs.inst.issueCycle == null) {
+        rs.inst.issueCycle = clockCycle;
+      }
+
+      if (RF.registers[inst.sourceRegister1].reservationStation == null)
+        rs.vj = RF.registers[inst.sourceRegister1].value;
+      else rs.qj = RF.registers[inst.sourceRegister1].reservationStation;
+
+      if (RF.registers[inst.sourceRegister2].reservationStation == null)
+        rs.vk = RF.registers[inst.sourceRegister2].value;
+      else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
+
+      RF.registers[inst.destinationRegister].reservationStation = rs.name;
+    },
+    shouldExecute: (rs) => {
+      let result;
+      result = (rs.qj == null && rs.qk == null);
+      if (rs.qj == null && rs.qk == null){
+        console.log("Finished previous cycle");
+      }
+      return result;
+    },
+    executeFn: (rs) => {
+      if (rs.inst.executionStartCycle == null) {
+        rs.inst.executionStartCycle = clockCycle;
+      }
+      rs.clockCycleCounter++;
+      if (rs.clockCycleCounter < executionCycle[rs.inst.op]) return;
+
+      if (rs.inst.executionEndCycle == null) {
+        rs.inst.executionEndCycle = clockCycle;
+        rs.result = rs.vj * rs.vk;
+        console.log("MUL result: ", rs.result);
+      }
+      if (commonDataBus.reservationStation == null) {
+        rs.inst.executed = true;
+        commonDataBus.value = rs.result;
+        commonDataBus.reservationStation = rs.name;
+      }
+    },
+    writeFn: (rs) => {
+      console.log("MUL write 1");
+      if (rs.inst.writeCycle == null) rs.inst.writeCycle = clockCycle;
+
+      if (
+        RF.registers[rs.inst.destinationRegister].reservationStation == rs.name
+      ) {
+        console.log("MUL write");
+        RF.registers[rs.inst.destinationRegister].value = rs.result;
+        RF.registers[rs.inst.destinationRegister].reservationStation = null;
+      }
+      rs.inst.written = true;
+      rs.reset();
+    },
+  },
 
   [InstructionType.ADD_ADDI]: {
     type: InstructionType.ADD_ADDI,
@@ -141,6 +202,135 @@ const STATIONS_CONFIGS = {
 
   [InstructionType.BEQ]: {},
   [InstructionType.JAL_RET]: {},
+  [InstructionType.NOR]: {
+    type: InstructionType.NOR,
+    issueFn: (rs, inst) => {
+      console.log("NOR issue");
+      rs.busy = true;
+      rs.inst = inst;
+      rs.op = inst.type;
+      if (rs.inst.issueCycle == null) {
+        rs.inst.issueCycle = clockCycle;
+      }
+
+      if (RF.registers[inst.sourceRegister1].reservationStation == null)
+        rs.vj = RF.registers[inst.sourceRegister1].value;
+      else rs.qj = RF.registers[inst.sourceRegister1].reservationStation;
+
+      if (RF.registers[inst.sourceRegister2].reservationStation == null)
+        rs.vk = RF.registers[inst.sourceRegister2].value;
+      else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
+
+      RF.registers[inst.destinationRegister].reservationStation = rs.name;
+    },
+    shouldExecute: (rs) => {
+      
+      let result;
+      result = (rs.qj == null && rs.qk == null);
+      console.log("NOR should execute: ", result);
+      return result;
+    },
+    executeFn: (rs) => {
+      console.log("NOR execute");
+      if (rs.inst.executionStartCycle == null) {
+        rs.inst.executionStartCycle = clockCycle;
+      }
+      rs.clockCycleCounter++;
+      if (rs.clockCycleCounter < executionCycle[rs.inst.op]) return;
+
+      if (rs.inst.executionEndCycle == null) {
+        rs.inst.executionEndCycle = clockCycle;
+        rs.result = ~(rs.vj | rs.vk);
+        //console.log("MUL result: ", rs.result);
+      }
+      if (commonDataBus.reservationStation == null) {
+        rs.inst.executed = true;
+        commonDataBus.value = rs.result;
+        commonDataBus.reservationStation = rs.name;
+      }
+    },
+    writeFn: (rs) => {
+      //console.log("MUL write 1");
+      if (rs.inst.writeCycle == null) rs.inst.writeCycle = clockCycle;
+
+      if (
+        RF.registers[rs.inst.destinationRegister].reservationStation == rs.name
+      ) {
+        //console.log("MUL write");
+        RF.registers[rs.inst.destinationRegister].value = rs.result;
+        RF.registers[rs.inst.destinationRegister].reservationStation = null;
+      }
+      rs.inst.written = true;
+      rs.reset();
+    },
+  },
+  [InstructionType.NEG]: {
+    type: InstructionType.NEG,
+    issueFn: (rs, inst) => {
+      //console.log("MUL");
+      rs.busy = true;
+      rs.inst = inst;
+      rs.op = inst.type;
+      if (rs.inst.issueCycle == null) {
+        rs.inst.issueCycle = clockCycle;
+      }
+
+      if (RF.registers[inst.sourceRegister1].reservationStation == null)
+        rs.vj = RF.registers[inst.sourceRegister1].value;
+      else rs.qj = RF.registers[inst.sourceRegister1].reservationStation;
+
+      // if (RF.registers[inst.sourceRegister2].reservationStation == null)
+      //   rs.vk = RF.registers[inst.sourceRegister2].value;
+      // else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
+
+      RF.registers[inst.destinationRegister].reservationStation = rs.name;
+    },
+    shouldExecute: (rs) => {
+      let result;
+      result = (rs.qj == null);
+      // if (rs.qj == null && rs.qk == null){
+      //   console.log("Finished previous cycle");
+      // }
+      return result;
+    },
+    executeFn: (rs) => {
+      if (rs.inst.executionStartCycle == null) {
+        rs.inst.executionStartCycle = clockCycle;
+        console.log("NEG execution start cycle: ", rs.inst.executionStartCycle);
+      }
+      rs.clockCycleCounter++;
+      if (rs.clockCycleCounter < executionCycle[rs.inst.op]){ 
+        return;
+      }
+
+      if (rs.inst.executionEndCycle == null) {
+        rs.inst.executionEndCycle = clockCycle;
+        console.log("NEG execution cycle: ", rs.inst.executionEndCycle);
+        rs.result = rs.vj * (-1);
+        //console.log("MUL result: ", rs.result);
+      }
+      if (commonDataBus.reservationStation == null) {
+        rs.inst.executed = true;
+        commonDataBus.value = rs.result;
+        commonDataBus.reservationStation = rs.name;
+      }
+    },
+    writeFn: (rs) => {
+      //console.log("MUL write 1");
+      if (rs.inst.writeCycle == null) rs.inst.writeCycle = clockCycle;
+
+      if (
+        RF.registers[rs.inst.destinationRegister].reservationStation == rs.name
+      ) {
+        //console.log("MUL write");
+        RF.registers[rs.inst.destinationRegister].value = rs.result;
+        RF.registers[rs.inst.destinationRegister].reservationStation = null;
+      }
+      rs.inst.written = true;
+      rs.reset();
+    },
+
+  },
 };
 
 class ReservationStationsTable {
