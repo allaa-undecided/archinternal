@@ -46,7 +46,7 @@ function generateTable(instructions) {
   tableHeader.appendChild(writeHeader);
   instructions.forEach((instruction) => {
     const row = document.createElement("tr");
-    console.log("HERE INST:",instruction);
+    console.log("HERE INST:", instruction);
     tableBody.appendChild(row);
     const instructionCell = document.createElement("td");
     instructionCell.innerHTML = instruction.op;
@@ -88,17 +88,12 @@ function generateTable(instructions) {
     registerCell.innerHTML = `R${i}`;
     row.appendChild(registerCell);
     const valueCell = document.createElement("td");
-    valueCell.innerHTML = RF.registers[`R${i}`].value
+    valueCell.innerHTML = RF.registers[`R${i}`].value;
     row.appendChild(valueCell);
   }
 
   console.log(RF.registers);
-
-
-
 }
-
-
 
 function start() {
   const code = document.getElementById("code").value;
@@ -107,9 +102,6 @@ function start() {
   program.simulate();
 
   generateTable(program.instructions);
-
-
-  
 }
 
 class Program {
@@ -125,21 +117,25 @@ class Program {
   }
   simulate() {
     let counter = 0;
-    while (!finished) {
-
+    while (!this.propgramFinished()) {
       counter++;
       clockCycle++;
       RSTable.updateStations();
-      const instruction = this.instructions[this.pc/4];
+      const instruction = this.instructions[this.pc / 4];
       if (instruction)
         if (RSTable.issue(instruction)) {
           this.pc += 4;
         }
-        if (counter >= 20) {
-      
-          finished = true;}
-        }
+      if (counter > 1000) {
+        console.log("INFINITE LOOP");
+        break;
       }
+    }
+  }
+
+  propgramFinished() {
+    return this.pc >= this.instructions.length && RSTable.isFinished();
+  }
 }
 /*
       The issue stage where we check if the instruction can be issued or not accoring to the availability of the reservation stations. 

@@ -1,5 +1,5 @@
 class reservationStation {
-  constructor({ issueFn, executeFn, writeFn, type, shouldExecute,name }) {
+  constructor({ issueFn, executeFn, writeFn, type, shouldExecute, name }) {
     this.reset();
     this.issueInternal = issueFn;
     this.execute = executeFn;
@@ -7,7 +7,7 @@ class reservationStation {
     this.type = type;
     this.result = null;
     this.shouldExecute = shouldExecute;
-    this.name=name;
+    this.name = name;
   }
 
   reset() {
@@ -68,7 +68,7 @@ const STATIONS_CONFIGS = {
 
   [InstructionType.ADD_ADDI]: {
     type: InstructionType.ADD_ADDI,
-    
+
     issueFn: (rs, inst) => {
       rs.busy = true;
       rs.inst = inst;
@@ -90,7 +90,6 @@ const STATIONS_CONFIGS = {
       }
 
       RF.registers[inst.destinationRegister].reservationStation = rs.name;
-
     },
     shouldExecute: (rs) => {
       let result;
@@ -120,13 +119,12 @@ const STATIONS_CONFIGS = {
       commonDataBus = { value: rs.result, reservationStation: rs.name };
     },
     writeFn: (rs) => {
-      if (rs.inst.writeCycle == null) 
-        rs.inst.writeCycle = clockCycle;
-      
+      if (rs.inst.writeCycle == null) rs.inst.writeCycle = clockCycle;
 
-    
-      if (RF.registers[rs.inst.destinationRegister].reservationStation == rs.name) {
-        console.log("writing",rs.result);
+      if (
+        RF.registers[rs.inst.destinationRegister].reservationStation == rs.name
+      ) {
+      
         RF.registers[rs.inst.destinationRegister].value = rs.result;
         RF.registers[rs.inst.destinationRegister].reservationStation = null;
       }
@@ -148,7 +146,8 @@ class ReservationStationsTable {
         this.stations[type].push(
           new reservationStation({
             name: `${type} ${i}`,
-            ...STATIONS_CONFIGS[type]})
+            ...STATIONS_CONFIGS[type],
+          })
         );
       }
     }
@@ -194,5 +193,13 @@ class ReservationStationsTable {
       }
     }
     commonDataBus.reset();
+  }
+
+  isFinished() {
+    for (const type in NUM_OF_STATIONS)
+      for (let i = 0; i < NUM_OF_STATIONS[type]; i++)
+        if (!this.stations[type][i].isFree()) return false;
+
+    return true;
   }
 }
