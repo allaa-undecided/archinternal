@@ -16,5 +16,18 @@ class RegisterFile {
       this.registers["R" + i] = new Register();
     }
   }
+
+  shouldWriteBack(rs) {
+    return (
+      this.registers[rs.inst.destinationRegister].reservationStation == rs.name
+      
+    );
+  }
+
+  writeBack(rs) {
+    this.registers[rs.inst.destinationRegister].value = rs.result;
+    this.registers[rs.inst.destinationRegister].reservationStation = null;
+  }
+
 }
 

@@ -11,7 +11,6 @@ class reservationStation {
   }
 
   reset() {
-    this.type = null;
     this.busy = false;
     this.op = null;
     this.vj = null;
@@ -41,7 +40,7 @@ class reservationStation {
 }
 
 const NUM_OF_STATIONS = {
-  [InstructionType.LW]: 0,
+  [InstructionType.LW]: 1,
   [InstructionType.SW]: 0,
   [InstructionType.MUL]: 0,
   [InstructionType.ADD_ADDI]: 2,
@@ -62,7 +61,51 @@ const executionCycle = {
 };
 
 const STATIONS_CONFIGS = {
-  [InstructionType.LW]: {},
+  [InstructionType.LW]: {
+    type: InstructionType.LW,
+    issueFn: (rs, inst) => {
+      rs.busy = true;
+      rs.inst = inst;
+      rs.op = inst.type;
+      if (rs.inst.issueCycle == null) {
+        rs.inst.issueCycle = clockCycle;
+      }
+
+      rs.address = inst.immediate + RF.registers[inst.sourceRegister1].value;
+
+      if (RF.registers[inst.destinationRegister].reservationStation == null) {
+        rs.vj = RF.registers[inst.destinationRegister].value;
+      } else rs.qj = RF.registers[inst.destinationRegister].reservationStation;
+
+
+   
+      RF.registers[rs.inst.destinationRegister].reservationStation = rs.name;
+
+    },
+    shouldExecute: (rs) => {
+      return rs.qj == null;
+    },
+    executeFn: (rs) => {
+      if (rs.inst.executionStartCycle == null)
+        rs.inst.executionStartCycle = clockCycle;
+console.log(rs.name,rs.clockCycleCounter,rs.type)
+      if (rs.clockCycleCounter === executionCycle[rs.type]) {
+        rs.inst.executed = true;
+        rs.inst.executionEndCycle = clockCycle;
+        console.log(rs.name,rs.address);
+        rs.result = memory.read(rs.address/4);
+      } else {
+        rs.clockCycleCounter++;
+      }
+    },
+    writeFn: (rs) => {
+      if (RF.shouldWriteBack(rs)) RF.writeBack(rs);
+
+      rs.inst.written = true;
+      rs.inst.writeCycle = clockCycle;
+      rs.reset();
+    },
+  },
   [InstructionType.SW]: {},
   [InstructionType.MUL]: {},
 
@@ -89,7 +132,7 @@ const STATIONS_CONFIGS = {
         else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
       }
 
-      RF.registers[inst.destinationRegister].reservationStation = rs.name;
+      RF.registers[rs.inst.destinationRegister].reservationStation = rs.name;
     },
     shouldExecute: (rs) => {
       let result;
@@ -117,7 +160,6 @@ const STATIONS_CONFIGS = {
           rs.result = rs.vj + rs.vk;
         }
       }
-  
 
       if (commonDataBus.reservationStation == null) {
         rs.inst.executed = true;
@@ -128,12 +170,8 @@ const STATIONS_CONFIGS = {
     writeFn: (rs) => {
       if (rs.inst.writeCycle == null) rs.inst.writeCycle = clockCycle;
 
-      if (
-        RF.registers[rs.inst.destinationRegister].reservationStation == rs.name
-      ) {
-        RF.registers[rs.inst.destinationRegister].value = rs.result;
-        RF.registers[rs.inst.destinationRegister].reservationStation = null;
-      }
+      if (RF.shouldWriteBack(rs)) RF.writeBack(rs);
+
       rs.inst.written = true;
       rs.reset();
     },
@@ -153,8 +191,9 @@ class ReservationStationsTable {
           new reservationStation({
             name: `${type} ${i}`,
             ...STATIONS_CONFIGS[type],
-          })
-        );
+          }))
+
+      
       }
     }
   }
@@ -189,13 +228,13 @@ class ReservationStationsTable {
   }
 
   broadcast() {
-    if(commonDataBus.reservationStation == null) return;
+    if (commonDataBus.reservationStation == null) return;
     for (const type in NUM_OF_STATIONS) {
       for (let i = 0; i < NUM_OF_STATIONS[type]; i++) {
         const station = this.stations[type][i];
         if (station.isFree()) continue;
         if (station.qj == commonDataBus.reservationStation) {
-          console.log("VAL",commonDataBus.value);
+          console.log("VAL", commonDataBus.value);
           station.vj = commonDataBus.value;
           station.qj = null;
         }

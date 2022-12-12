@@ -27,13 +27,16 @@
  class="block p-2.5 w-full text-3xl text-gray-900 bg-gray-50 rounded-lg border border-gray-300 
  focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
   dark:focus:ring-blue-500 dark:focus:border-blue-500 h-96" placeholder="Write your code here...">ADDI R1, R0, 5
-ADDI R1, R1, 5  
+ADDI R1, R1, 5
+LW R2, R0, 0  
+LW R3, R0, 4
+LW R4, R0, 12   
 </textarea>
 <button class="btn btn-primary text-xl" onclick="start()">Submit!</button> 
 </div>
 
 <div class="" style="flex:0.5">
-  <table id="table" class="table-auto result-table" >
+  <table id="table" class="table-auto result-table text-xl" >
     <thead>
       <tr>
         <th class="px-4 py-2">Instruction</th>
@@ -110,7 +113,10 @@ ADDI R1, R1, 5
             <td id="R7">0</td>
           </tr>
         </table>
-    
+        <h2>Memory Address</h2>
+        <table id="memory-table">
+         
+        </table>
     
 
 </div>
