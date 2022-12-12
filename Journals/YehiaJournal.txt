@@ -1,0 +1,10 @@
+Dec 8, 9:50 PM: Creating the skeleton of the project using c++: a comprehensive skeleton including instruction, register, main, and reservation station files. 
+		Implemented an issuing function 
+
+Dec 10, 10:15 PM: Switched implementation	to javascript by adapting the code to Allaa's and merging them together. 
+		 Worked on the main function so that the javascript files work properly across all files and is reflected in the GUI. 
+
+Dec 11, 3:00 PM: Created the functions that kept track of the states: broadcasting, updating the stations, and whether the instruction finished.
+		Implemented the functions for the neg and nor instructions
+
+Dec 12, 8:25 PM: Implemented the functions for the BEQ instruction 

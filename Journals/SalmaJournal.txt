@@ -1,0 +1,15 @@
+Dec 8, 6:15 PM: Researched the tomasulo algorithm and created the structs and classes needed to implement the algorithm 
+		Started working on the execution function to replicate the execute stage
+
+Dec 10, 11:00 PM: Worked on the CSS files
+		 Worked on the logic of the reservation station file so that we're able to keep track of the clock cycle and make sure the functions are being processed properly 
+		 Worked on the register file logic
+
+Dec 11, 5:30 PM: Implemented the functions needed for the load, store, and multiplication instructions to work
+		Created the test cases
+
+Dec 12, 11:30 PM: Completed the report 
+		 Completed the readme file
+
+
+

@@ -1,0 +1,12 @@
+Dec 8, 8:45 PM: Created a basic user interface using javascript that takes in input from user as a paragraph
+		Created the skeleton of the project on javascript 
+
+Dec 10, 10:15 PM: Figured out how to parse the input from the user properly so that the program nows the exact instruction and its registers
+		 Finalized the interface
+		 Started working on the reservation station file and functions 
+
+Dec 11, 7:30 PM: Changed the logic of the reservation station so that each instruction has its own functions
+		Implemented the ADD and ADDI functions by creating their respective issuing, executing, and writing back functions and the necessary functions for them to work
+
+Dec 12, 10:30 PM: Implemented the functions for the JAL and RET instructions. 
+		
