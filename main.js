@@ -172,6 +172,7 @@ class Program {
       counter++;
       clockCycle++;
       RSTable.updateStations();
+      console.log(`PC ${pc / 4} at clock cycle ${clockCycle}`)
       const instruction = this.instructions[pc / 4];
       if (instruction)
         if (RSTable.issue(instruction)) {

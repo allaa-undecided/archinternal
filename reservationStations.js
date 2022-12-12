@@ -56,7 +56,7 @@ const executionCycle = {
   [InstructionType.ADD_ADDI]: 2,
   [InstructionType.BEQ]: 1,
   [InstructionType.JAL_RET]: 1,
-  [InstructionType.NEG]: 3,
+  [InstructionType.NEG]: 1,
   [InstructionType.NOR]: 1,
 };
 
@@ -295,23 +295,16 @@ const STATIONS_CONFIGS = {
       if (rs.inst.issueCycle == null) {
         rs.inst.issueCycle = clockCycle;
       }
+      // if (RF.registers[inst.sourceRegister1].reservationStation == null)
+      //   rs.vj = RF.registers[inst.sourceRegister1].value;
+      // else rs.qj = RF.registers[inst.sourceRegister1].reservationStation;
 
-      if (RF.registers[inst.sourceRegister1].reservationStation == null)
-        rs.vj = RF.registers[inst.sourceRegister1].value;
-      else rs.qj = RF.registers[inst.sourceRegister1].reservationStation;
-
-      if (RF.registers[inst.sourceRegister2].reservationStation == null)
-        rs.vk = RF.registers[inst.sourceRegister2].value;
-      else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
-      
-    },
-
-    shouldExecute: (rs) => {
       if (rs.inst.opCode == OP_CODES.JAL) {
-        rs.address = inst.label;
+        rs.address = labelToPC[inst.label];
+        inst.destinationRegister = "R1";
       } 
       else if (rs.inst.opCode == OP_CODES.RET) {
-        rs.vj = RF.registers["R1"].value;
+        rs.vj =RF.registers["R1"].value;
       }
       // else {
       //   if (RF.registers[inst.sourceRegister2].reservationStation == null)
@@ -319,16 +312,20 @@ const STATIONS_CONFIGS = {
       //   else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
       // }
 
-      RF.registers["R1"].reservationStation = rs.name;
+      if (rs.inst.opCode == OP_CODES.JAL) RF.registers["R1"].reservationStation = rs.name;
+      // if (RF.registers[inst.sourceRegister1].reservationStation == null)
+      //   rs.vj = RF.registers[inst.sourceRegister1].value;
+      // else rs.qj = RF.registers[inst.sourceRegister1].reservationStation;
+
+      // if (RF.registers[inst.sourceRegister2].reservationStation == null)
+      //   rs.vk = RF.registers[inst.sourceRegister2].value;
+      // else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
+      
     },
     shouldExecute: (rs) => {
       let result;
       result = rs.qj == null;
-      // if (rs.inst.opCode == OP_CODES.JAL) {
-      //   result = rs.qj == null;
-      // } else if (rs.inst.opCode == OP_CODES.ADD) {
-      //   result = rs.qj == null && rs.qk == null;
-      // }
+ 
       return result;
     },
 
@@ -337,22 +334,32 @@ const STATIONS_CONFIGS = {
         rs.inst.executionStartCycle = clockCycle;
       }
       rs.clockCycleCounter++;
-      if (rs.clockCycleCounter < executionCycle[rs.inst.op]) return;
+      if (rs.clockCycleCounter <= executionCycle[rs.inst.op]) return;
+
+      console.log("executing jal/ret");
+
 
       if (rs.inst.executionEndCycle == null) {
         rs.inst.executionEndCycle = clockCycle;
+        console.log("executing jal/ret", rs.inst.opCode,rs.inst.executionEndCycle);
         if (rs.inst.opCode == OP_CODES.JAL) {
-          rs.result = pc + 4;
-          pc = pc + rs.address;
+          rs.result = rs.inst.pc + 4;
+          pc = rs.address;
         } else if (rs.inst.opCode == OP_CODES.RET) {
           pc = rs.vj;
         }
       }
-
+      
+      
+      if(rs.inst.opCode == OP_CODES.JAL) {
       if (commonDataBus.reservationStation == null) {
+        console.log("HEREx`")
         rs.inst.executed = true;
         commonDataBus.value = rs.result;
         commonDataBus.reservationStation = rs.name;
+      }}
+      else{
+        rs.inst.executed = true;
       }
     },
     writeFn: (rs) => {
@@ -460,7 +467,7 @@ const STATIONS_CONFIGS = {
         console.log("NEG execution start cycle: ", rs.inst.executionStartCycle);
       }
       rs.clockCycleCounter++;
-      if (rs.clockCycleCounter < executionCycle[rs.inst.op]) {
+      if (rs.clockCycleCounter <= executionCycle[rs.inst.op]) {
         return;
       }
 

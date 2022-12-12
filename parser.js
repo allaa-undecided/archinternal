@@ -77,7 +77,7 @@ class Parser {
           label: lineSplit[1],
         };
         labels.push(lineSplit[1]);
-      } else if (line.includes("RETURN")) {
+      } else if (line.includes("RET")) {
         instructionParams = {
           type: lineSplit[0],
         };
@@ -95,7 +95,7 @@ class Parser {
           sourceRegister2: lineSplit[3],
         };
       } else if (line.includes(":")) {
-        this.labelToPC[line.split(":")[0]] = i * 4;
+        this.labelToPC[line.split(":")[0]] = (i) * 4;
         continue;
       } else {
         alert("Invalid Instruction");
