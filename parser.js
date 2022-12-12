@@ -108,7 +108,6 @@ class Parser {
       });
       instructions.push(instruction);
     }
-console.log(labels)
     const invalidLabel = labels.find((label) => !this.labelToPC[label]);
     if (invalidLabel) {
       alert("Invalid Label: " + invalidLabel);

@@ -5,6 +5,7 @@ let finished=false;
 let pc=0;
 const MEM_SIZE=100;
 const memory = new Memory(MEM_SIZE);
+let labelToPC = {};
 
 
 

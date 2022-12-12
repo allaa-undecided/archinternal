@@ -149,6 +149,7 @@ function generateMemoryTable() {
 function start() {
   const code = document.getElementById("code").value;
   const parser = new Parser(code);
+  labelToPC = parser.labelToPC;
   const program = new Program(parser.instructions, parser.labelToPC);
   program.simulate();
 
@@ -157,14 +158,13 @@ function start() {
 }
 
 class Program {
-  constructor(instructions, labelToPc) {
-    this.init(instructions, labelToPc);
+  constructor(instructions, ) {
+    this.init(instructions, );
   }
 
-  init(instructions, labelToPc) {
+  init(instructions,) {
     this.instructions = instructions;
 
-    this.labelToPc = labelToPc;
   }
   simulate() {
     let counter = 0;
