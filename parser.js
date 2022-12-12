@@ -95,7 +95,7 @@ class Parser {
           sourceRegister2: lineSplit[3],
         };
       } else if (line.includes(":")) {
-        this.labelToPc[line.split(":")[0]] = i * 4;
+        this.labelToPC[line.split(":")[0]] = i * 4;
         continue;
       } else {
         alert("Invalid Instruction");
@@ -108,8 +108,8 @@ class Parser {
       });
       instructions.push(instruction);
     }
-
-    const invalidLabel = labels.find((label) => !labelToPc[label]);
+console.log(labels)
+    const invalidLabel = labels.find((label) => !this.labelToPC[label]);
     if (invalidLabel) {
       alert("Invalid Label: " + invalidLabel);
       return [];

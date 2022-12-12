@@ -45,7 +45,7 @@ const NUM_OF_STATIONS = {
   [InstructionType.MUL]: 1,
   [InstructionType.ADD_ADDI]: 2,
   [InstructionType.BEQ]: 0,
-  [InstructionType.JAL_RET]: 0,
+  [InstructionType.JAL_RET]: 1,
   [InstructionType.NEG]: 1,
   [InstructionType.NOR]: 1,
 };
@@ -283,8 +283,11 @@ const STATIONS_CONFIGS = {
     },
   },
 
-  [InstructionType.BEQ]: {
-    type: InstructionType.BEQ,
+  
+  [InstructionType.BEQ]: {},
+  [InstructionType.JAL_RET]: {
+    type: InstructionType.JAL_RET,
+
     issueFn: (rs, inst) => {
       rs.busy = true;
       rs.inst = inst;
@@ -301,10 +304,66 @@ const STATIONS_CONFIGS = {
         rs.vk = RF.registers[inst.sourceRegister2].value;
       else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
       
-    }
+    },
 
+    shouldExecute: (rs) => {
+      if (rs.inst.opCode == OP_CODES.JAL) {
+        rs.address = inst.label;
+      } 
+      else if (rs.inst.opCode == OP_CODES.RET) {
+        rs.vj = RF.registers["R1"].value;
+      }
+      // else {
+      //   if (RF.registers[inst.sourceRegister2].reservationStation == null)
+      //     rs.vk = RF.registers[inst.sourceRegister2].value;
+      //   else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
+      // }
+
+      RF.registers["R1"].reservationStation = rs.name;
+    },
+    shouldExecute: (rs) => {
+      let result;
+      result = rs.qj == null;
+      // if (rs.inst.opCode == OP_CODES.JAL) {
+      //   result = rs.qj == null;
+      // } else if (rs.inst.opCode == OP_CODES.ADD) {
+      //   result = rs.qj == null && rs.qk == null;
+      // }
+      return result;
+    },
+
+    executeFn: (rs) => {
+      if (rs.inst.executionStartCycle == null) {
+        rs.inst.executionStartCycle = clockCycle;
+      }
+      rs.clockCycleCounter++;
+      if (rs.clockCycleCounter < executionCycle[rs.inst.op]) return;
+
+      if (rs.inst.executionEndCycle == null) {
+        rs.inst.executionEndCycle = clockCycle;
+        if (rs.inst.opCode == OP_CODES.JAL) {
+          rs.result = pc + 4;
+          pc = pc + rs.address;
+        } else if (rs.inst.opCode == OP_CODES.RET) {
+          pc = rs.vj;
+        }
+      }
+
+      if (commonDataBus.reservationStation == null) {
+        rs.inst.executed = true;
+        commonDataBus.value = rs.result;
+        commonDataBus.reservationStation = rs.name;
+      }
+    },
+    writeFn: (rs) => {
+      if (rs.inst.writeCycle == null) rs.inst.writeCycle = clockCycle;
+      if (rs.inst.opCode == OP_CODES.JAL) {
+      if (RF.shouldWriteBack(rs)) RF.writeBack(rs);
+      }
+      rs.inst.written = true;
+      rs.reset();
+    },
   },
-  [InstructionType.JAL_RET]: {},
   [InstructionType.NOR]: {
     type: InstructionType.NOR,
     issueFn: (rs, inst) => {
