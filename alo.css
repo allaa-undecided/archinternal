@@ -81,3 +81,14 @@ html, body {
   button.btn-primary:hover {
     background-position: 0;
   }
+
+  .result-table{
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #f1c40f;
+    border-radius: 0.6em;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }

@@ -1,5 +1,5 @@
 class reservationStation {
-  constructor({ issueFn, executeFn, writeFn, type, shouldExecute }) {
+  constructor({ issueFn, executeFn, writeFn, type, shouldExecute,name }) {
     this.reset();
     this.issueInternal = issueFn;
     this.execute = executeFn;
@@ -7,6 +7,7 @@ class reservationStation {
     this.type = type;
     this.result = null;
     this.shouldExecute = shouldExecute;
+    this.name=name;
   }
 
   reset() {
@@ -67,6 +68,7 @@ const STATIONS_CONFIGS = {
 
   [InstructionType.ADD_ADDI]: {
     type: InstructionType.ADD_ADDI,
+    
     issueFn: (rs, inst) => {
       rs.busy = true;
       rs.inst = inst;
@@ -86,6 +88,9 @@ const STATIONS_CONFIGS = {
           rs.vk = RF.registers[inst.sourceRegister2].value;
         else rs.qk = RF.registers[inst.sourceRegister2].reservationStation;
       }
+
+      RF.registers[inst.destinationRegister].reservationStation = rs.name;
+
     },
     shouldExecute: (rs) => {
       let result;
@@ -112,13 +117,16 @@ const STATIONS_CONFIGS = {
         rs.result = rs.vj + rs.vk;
       }
       rs.inst.executed = true;
-      commonDataBus = { value: rs.result, reservationStation: this };
+      commonDataBus = { value: rs.result, reservationStation: rs.name };
     },
     writeFn: (rs) => {
-      if (rs.inst.writeCycle == null) {
+      if (rs.inst.writeCycle == null) 
         rs.inst.writeCycle = clockCycle;
-      }
-      if (RF.registers[rs.inst.destinationRegister].reservationStation == this) {
+      
+
+    
+      if (RF.registers[rs.inst.destinationRegister].reservationStation == rs.name) {
+        console.log("writing",rs.result);
         RF.registers[rs.inst.destinationRegister].value = rs.result;
         RF.registers[rs.inst.destinationRegister].reservationStation = null;
       }
@@ -138,7 +146,9 @@ class ReservationStationsTable {
       this.stations[type] = [];
       for (let i = 0; i < NUM_OF_STATIONS[type]; i++) {
         this.stations[type].push(
-          new reservationStation(STATIONS_CONFIGS[type])
+          new reservationStation({
+            name: `${type} ${i}`,
+            ...STATIONS_CONFIGS[type]})
         );
       }
     }

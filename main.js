@@ -21,7 +21,10 @@ The simulator supports LW, SW, MUL, add, addi, Beq, jal, return,NEG,NOR instruct
 
 function generateTable(instructions) {
   const table = document.getElementById("table");
+  table.innerHTML = "";
+  table.className = "table-auto";
   const tableBody = document.createElement("tbody");
+  tableBody.id = "table-body";
   table.appendChild(tableBody);
   const tableHeader = document.createElement("tr");
   tableBody.appendChild(tableHeader);
@@ -34,7 +37,7 @@ function generateTable(instructions) {
   const executeHeader = document.createElement("th");
   executeHeader.innerHTML = "Execute Start";
   tableHeader.appendChild(executeHeader);
-const executeEndHeader = document.createElement("th");
+  const executeEndHeader = document.createElement("th");
   executeEndHeader.innerHTML = "Execute End";
   tableHeader.appendChild(executeEndHeader);
 
@@ -63,6 +66,36 @@ const executeEndHeader = document.createElement("th");
     writeCell.innerHTML = instruction.writeCycle;
     row.appendChild(writeCell);
   });
+
+  const registersTable = document.getElementById("registers-table");
+  registersTable.innerHTML = "";
+  registersTable.className = "table-auto";
+  const registersTableBody = document.createElement("tbody");
+  registersTableBody.id = "registers-table-body";
+  registersTable.appendChild(registersTableBody);
+  const registersTableHeader = document.createElement("tr");
+  registersTableBody.appendChild(registersTableHeader);
+  const registerHeader = document.createElement("th");
+  registerHeader.innerHTML = "Register";
+  registersTableHeader.appendChild(registerHeader);
+  const valueHeader = document.createElement("th");
+  valueHeader.innerHTML = "Value";
+  registersTableHeader.appendChild(valueHeader);
+  for (let i = 0; i < 8; i++) {
+    const row = document.createElement("tr");
+    registersTableBody.appendChild(row);
+    const registerCell = document.createElement("td");
+    registerCell.innerHTML = `R${i}`;
+    row.appendChild(registerCell);
+    const valueCell = document.createElement("td");
+    valueCell.innerHTML = RF.registers[`R${i}`].value
+    row.appendChild(valueCell);
+  }
+
+  console.log(RF.registers);
+
+
+
 }
 
 
