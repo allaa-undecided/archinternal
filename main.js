@@ -110,7 +110,6 @@ class Program {
 
   init(instructions, labelToPc) {
     this.instructions = instructions;
-    this.pc = 0;
 
     this.labelToPc = labelToPc;
   }
@@ -120,10 +119,10 @@ class Program {
       counter++;
       clockCycle++;
       RSTable.updateStations();
-      const instruction = this.instructions[this.pc / 4];
+      const instruction = this.instructions[pc / 4];
       if (instruction)
         if (RSTable.issue(instruction)) {
-          this.pc += 4;
+          pc += 4;
         }
       if (counter > 100) {
         console.log("INFINITE LOOP");
