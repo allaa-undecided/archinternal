@@ -46,7 +46,6 @@ function generateTable(instructions) {
   tableHeader.appendChild(writeHeader);
   instructions.forEach((instruction) => {
     const row = document.createElement("tr");
-    console.log("HERE INST:", instruction);
     tableBody.appendChild(row);
     const instructionCell = document.createElement("td");
     instructionCell.innerHTML = instruction.op;
@@ -126,7 +125,7 @@ class Program {
         if (RSTable.issue(instruction)) {
           this.pc += 4;
         }
-      if (counter > 1000) {
+      if (counter > 100) {
         console.log("INFINITE LOOP");
         break;
       }
