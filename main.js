@@ -175,7 +175,7 @@ class Program {
       console.log(`PC ${pc / 4} at clock cycle ${clockCycle}`)
       const instruction = this.instructions[pc / 4];
       if (instruction)
-        if (RSTable.issue(instruction)) {
+        if ( RSTable.issue(instruction)) {
           pc += 4;
         }
       if (counter > 200) {
