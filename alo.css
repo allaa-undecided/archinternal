@@ -92,3 +92,125 @@ html, body {
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   }
+
+  #result-table th, #result-table td {
+    padding: 12px 15px;
+    text-align: center;
+    margin: 20px;
+  }
+
+  #result-table th {
+    background-color: #f1c40f;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  #result-table tr {
+    border-bottom: 1px solid #f1c40f;
+  }
+
+  #registers-table{
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #f1c40f;
+    border-radius: 0.6em;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  #registers-table th, #registers-table td {
+    padding: 12px 15px;
+    text-align: center;
+    margin: 20px;
+  }
+
+  #registers-table th {
+    background-color: #f1c40f;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  #registers-table tr {
+    border-bottom: 1px solid #f1c40f;
+    color : #fff;
+
+  }
+
+  .result-table tbody tr:hover {
+    background-color: #f1c40f;
+    color: #fff;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+  }
+
+
+  #table {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #f1c40f;
+    border-radius: 0.6em;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  #table th, #table td {
+    padding: 12px 15px;
+    text-align: center;
+    margin: 20px;
+  }
+
+  #table th {
+    background-color: #f1c40f;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  #table tr {
+    border-bottom: 1px solid #f1c40f;
+  }
+
+  #table tbody tr:hover {
+    background-color: #f1c40f;
+    color: #fff;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+  }
+  #memory-table{
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #f1c40f;
+    border-radius: 0.6em;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  #memory-table th, #memory-table td {
+    padding: 12px 15px;
+    text-align: center;
+    margin: 20px;
+  }
+
+  #memory-table th {
+    background-color: #f1c40f;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  #memory-table tr {
+    border-bottom: 1px solid #f1c40f;
+  }
+
+  #memory-table tbody tr:hover {
+    background-color: #f1c40f;
+    color: #fff;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+  }
+
+  

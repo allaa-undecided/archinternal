@@ -94,6 +94,58 @@ function generateTable(instructions) {
   console.log(RF.registers);
 }
 
+
+
+
+
+
+
+function generateMemoryTable() {
+  const table = document.getElementById("memory-table");
+  table.innerHTML = "";
+  table.className = "table-auto";
+  const tableBody = document.createElement("tbody");
+  tableBody.id = "memory-table-body";
+  table.appendChild(tableBody);
+  const tableHeader = document.createElement("tr");
+  tableBody.appendChild(tableHeader);
+  const addressHeader = document.createElement("th");
+  addressHeader.innerHTML = "Address";
+  tableHeader.appendChild(addressHeader);
+  const valueHeader = document.createElement("th");
+  valueHeader.innerHTML = "Valuppppe";
+  tableHeader.appendChild(valueHeader);
+  for (let i = 0; i < 20; i++) {
+    const row = document.createElement("tr");
+    tableBody.appendChild(row);
+    const addressCell = document.createElement("td");
+    addressCell.innerHTML = i;
+    row.appendChild(addressCell);
+    const valueCell = document.createElement("td");
+    valueCell.innerHTML = memory.read(i)
+    row.appendChild(valueCell);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function start() {
   const code = document.getElementById("code").value;
   const parser = new Parser(code);
@@ -101,6 +153,7 @@ function start() {
   program.simulate();
 
   generateTable(program.instructions);
+  generateMemoryTable();
 }
 
 class Program {
@@ -124,7 +177,7 @@ class Program {
         if (RSTable.issue(instruction)) {
           pc += 4;
         }
-      if (counter > 100) {
+      if (counter > 200) {
         console.log("INFINITE LOOP");
         break;
       }
