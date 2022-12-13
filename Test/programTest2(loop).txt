@@ -6,6 +6,6 @@ BEQ R3, R0, L2
 ADDI R4, R0, 1
 NEG R4, R4 #R4 = -1
 ADD R3, R3, R4 #decrementing by 1
-JAL R5, L1 #loop until R3 = 0
+JAL L1 #loop until R3 = 0
 L2:
 ADD R6, R0, R3 #R6 = 0 

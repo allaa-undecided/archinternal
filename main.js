@@ -153,6 +153,7 @@ function start() {
   totalInstructions = parser.instructions.length;
   const program = new Program(parser.instructions, parser.labelToPC);
   program.simulate();
+  console.log(program.instructions)
 
   generateTable(program.instructions);
   generateRegisterTable();
