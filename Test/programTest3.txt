@@ -1,17 +1,19 @@
-ADDI x1, x0, 20
-ADDI x2, x0, 1
-ADDI x3, x0, 2
-MUL x4, x3, x3 #x4 = 4
-ADD x5, x3, x3
-ADD x5, x0, x2 #x5 = 5
-STORE x5, 0(x0) #store value of x2 in memory 0 
-LOAD x6, 0(x0) #load value inside mem[0] to x6
-NEG x6, x6 #x6 = -5
-ADDI x7, x0, 0 #initialize x7 with 0
-BEQ x1, x0, 3
-ADD x1, x1, x6
-ADD x7, x7, x2 #increment x7 by 1
-JAL x3, 2
-ADD x1, x7, x0 #stores the answer of 20/5
-NOR x2, x2
-RET x1
+ADDI R1, R0, 20
+ADDI R2, R0, 1
+ADDI R3, R0, 2
+MUL R4, R3, R3 #R4 = 4
+ADD R5, R3, R3
+ADD R5, R0, R2 #R5 = 5
+STORE R5, 0(R0) #store value of R2 in memory 0 
+LOAD R6, 0(R0) #load value inside mem[0] to R6
+NEG R6, R6 #R6 = -5
+ADDI R7, R0, 0 #initialize R7 with 0
+L1:
+BEQ R1, R0, L2
+ADD R1, R1, R6
+ADD R7, R7, R2 #increment R7 by 1
+JAL L1
+L2:
+ADD R1, R7, R0 #stores the answer of 20/5
+NOR R2, R2
+RET R1
