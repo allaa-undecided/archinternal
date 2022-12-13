@@ -41,8 +41,8 @@ class reservationStation {
 }
 
 const NUM_OF_STATIONS = {
-  [InstructionType.LW]: 1,
-  [InstructionType.SW]: 1,
+  [InstructionType.LW]: 2,
+  [InstructionType.SW]: 2,
   [InstructionType.MUL]: 1,
   [InstructionType.ADD_ADDI]: 3,
   [InstructionType.BEQ]: 1,
