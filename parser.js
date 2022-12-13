@@ -35,6 +35,14 @@ class Parser {
           sourceRegister1: lineSplit[2],
           immediate: lineSplit[3],
         };
+
+        // if (!lineSplit[3].includes("(")) {
+        //   instructionParams.immediate = lineSplit[3].split("(")[0];
+        //   instructionParams.sourceRegister1 = lineSplit[3]
+        //     .split("(")[1]
+        //     .replace(")", "");
+        // }
+
       } else if (line.includes("SW")) {
         instructionParams = {
           type: lineSplit[0],
@@ -55,7 +63,6 @@ class Parser {
           destinationRegister: lineSplit[1],
           sourceRegister1: lineSplit[2],
           immediate: lineSplit[3],
-
         };
       } else if (line.includes("ADD")) {
         instructionParams = {
@@ -63,7 +70,6 @@ class Parser {
           destinationRegister: lineSplit[1],
           sourceRegister1: lineSplit[2],
           sourceRegister2: lineSplit[3],
-
         };
       } else if (line.includes("BEQ")) {
         instructionParams = {
@@ -97,7 +103,7 @@ class Parser {
           sourceRegister2: lineSplit[3],
         };
       } else if (line.includes(":")) {
-        this.labelToPC[line.split(":")[0]] = (i) * 4;
+        this.labelToPC[line.split(":")[0]] = i * 4;
         continue;
       } else {
         alert("Invalid Instruction");

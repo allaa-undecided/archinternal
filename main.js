@@ -55,7 +55,7 @@ function generateTable(instructions) {
     const instructionCell = document.createElement("td");
     instructionCell.innerHTML = instruction.op;
     row.appendChild(instructionCell);
-    
+
     const PCCell = document.createElement("td");
     PCCell.innerHTML = instruction.pc;
     row.appendChild(PCCell);
@@ -74,7 +74,8 @@ function generateTable(instructions) {
     writeCell.innerHTML = instruction.writeCycle ?? "--";
     row.appendChild(writeCell);
   });
-
+}
+function generateRegisterTable() {
   const registersTable = document.getElementById("registers-table");
   registersTable.innerHTML = "";
   registersTable.className = "table-auto";
@@ -103,6 +104,19 @@ function generateTable(instructions) {
     registersRow.appendChild(R);
   }
 }
+function addStats() {
+  const branchMispredicition = document.getElementById("branch-misprediction");
+  const mispredictionPercentage =
+    branchMisprecitions > 0
+      ? (branchMisprecitions / branchPredictions) * 100
+      : 0;
+  branchMispredicition.innerHTML = mispredictionPercentage + "%";
+
+  const IPC = document.getElementById("ipc");
+  IPC.innerHTML = Number(totalInstructions / clockCycle).toFixed(2);
+  const totalCycles = document.getElementById("cycle-count");
+  totalCycles.innerHTML = clockCycle;
+}
 
 function generateMemoryTable() {
   const table = document.getElementById("memory-table");
@@ -117,7 +131,7 @@ function generateMemoryTable() {
   addressHeader.innerHTML = "Address";
   tableHeader.appendChild(addressHeader);
   const valueHeader = document.createElement("th");
-  valueHeader.innerHTML = "Valuppppe";
+  valueHeader.innerHTML = "Value";
   tableHeader.appendChild(valueHeader);
   for (let i = 0; i < 20; i++) {
     const row = document.createElement("tr");
@@ -136,11 +150,14 @@ function start() {
   const code = document.getElementById("code").value;
   const parser = new Parser(code);
   labelToPC = parser.labelToPC;
+  totalInstructions = parser.instructions.length;
   const program = new Program(parser.instructions, parser.labelToPC);
   program.simulate();
 
   generateTable(program.instructions);
+  generateRegisterTable();
   generateMemoryTable();
+  addStats();
 }
 
 class Program {

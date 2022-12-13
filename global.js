@@ -8,6 +8,9 @@ const memory = new Memory(MEM_SIZE);
 let labelToPC = {};
 let branchIssued = false;
 let branchPC = null;
+let branchMisprecitions=0;
+let branchPredictions=0;
+let totalInstructions=0;
 
 
 

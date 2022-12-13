@@ -19,7 +19,7 @@ class reservationStation {
     this.qk = null;
     this.immediate = null;
     this.address = null;
-   
+
     this.inst = null;
     this.result = null;
     this.clockCycleCounter = 0;
@@ -321,7 +321,8 @@ const STATIONS_CONFIGS = {
         if (rs.result == 0) {
           pc = rs.address;
           RSTable.flushForBranch();
-        }
+        } else branchMisprecitions++;
+        branchPredictions++;
 
         branchIssued = false;
         branchPC = null;
