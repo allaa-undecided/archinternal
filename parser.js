@@ -15,8 +15,10 @@ class Parser {
       self[indx] = self[indx].toUpperCase();
       self[indx] = self[indx].replaceAll(",", " ");
       self[indx] = self[indx].replace(/\s\s+/g, " ");
+      self[indx] = self[indx].trim();
     });
     lines = lines.filter((line) => line.length > 0);
+    console.log(lines);
 
     const labels = [];
     for (var i = 0; i < lines.length; i++) {
