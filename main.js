@@ -23,7 +23,7 @@ function generateTable(instructions) {
   const table = document.getElementById("table");
   table.innerHTML = "";
   table.className = "table-auto result-table text-xl";
-  table.id="table";
+  table.id = "table";
   const tableBody = document.createElement("tbody");
   tableBody.id = "table-body";
   table.appendChild(tableBody);
@@ -31,10 +31,11 @@ function generateTable(instructions) {
   tableBody.appendChild(tableHeader);
   const instructionHeader = document.createElement("th");
   instructionHeader.innerHTML = "Instruction";
+  tableHeader.appendChild(instructionHeader);
   const PCHeader = document.createElement("th");
   PCHeader.innerHTML = "PC";
-  tableHeader.appendChild(instructionHeader);
-  const issueHeader = document.createElement("th");  
+  tableHeader.appendChild(PCHeader);
+  const issueHeader = document.createElement("th");
   issueHeader.innerHTML = "Issue";
   tableHeader.appendChild(issueHeader);
   const executeHeader = document.createElement("th");
@@ -54,19 +55,23 @@ function generateTable(instructions) {
     const instructionCell = document.createElement("td");
     instructionCell.innerHTML = instruction.op;
     row.appendChild(instructionCell);
+    
+    const PCCell = document.createElement("td");
+    PCCell.innerHTML = instruction.pc;
+    row.appendChild(PCCell);
     const issueCell = document.createElement("td");
-    issueCell.innerHTML = instruction.issueCycle;
+    issueCell.innerHTML = instruction.issueCycle ?? "--";
     row.appendChild(issueCell);
     const executeStartCell = document.createElement("td");
-    executeStartCell.innerHTML = instruction.executionStartCycle;
+    executeStartCell.innerHTML = instruction.executionStartCycle ?? "--";
     row.appendChild(executeStartCell);
 
     const executeEndCycle = document.createElement("td");
-    executeEndCycle.innerHTML = instruction.executionEndCycle;
+    executeEndCycle.innerHTML = instruction.executionEndCycle ?? "--";
     row.appendChild(executeEndCycle);
 
     const writeCell = document.createElement("td");
-    writeCell.innerHTML = instruction.writeCycle;
+    writeCell.innerHTML = instruction.writeCycle ?? "--";
     row.appendChild(writeCell);
   });
 
@@ -81,9 +86,9 @@ function generateTable(instructions) {
   const registerHeader = document.createElement("th");
   registerHeader.innerHTML = "Register";
   registersTableHeader.appendChild(registerHeader);
-  for(let i=0;i<8;i++){
-    const R= document.createElement("td");
-    R.innerHTML = "R"+i;
+  for (let i = 0; i < 8; i++) {
+    const R = document.createElement("td");
+    R.innerHTML = "R" + i;
     registersTableHeader.appendChild(R);
   }
   const registersRow = document.createElement("tr");
@@ -92,20 +97,12 @@ function generateTable(instructions) {
   registerValueHeader.innerHTML = "Value";
   registersRow.appendChild(registerValueHeader);
 
-  for(let i=0;i<8;i++){
-    const R= document.createElement("td");
+  for (let i = 0; i < 8; i++) {
+    const R = document.createElement("td");
     R.innerHTML = RF.registers[`R${i}`].value;
     registersRow.appendChild(R);
   }
-
-  
 }
-
-
-
-
-
-
 
 function generateMemoryTable() {
   const table = document.getElementById("memory-table");
@@ -130,29 +127,10 @@ function generateMemoryTable() {
     addressCell.innerHTML = i;
     row.appendChild(addressCell);
     const valueCell = document.createElement("td");
-    valueCell.innerHTML = memory.read(i)
+    valueCell.innerHTML = memory.read(i);
     row.appendChild(valueCell);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function start() {
   const code = document.getElementById("code").value;
@@ -166,13 +144,12 @@ function start() {
 }
 
 class Program {
-  constructor(instructions, ) {
-    this.init(instructions, );
+  constructor(instructions) {
+    this.init(instructions);
   }
 
-  init(instructions,) {
+  init(instructions) {
     this.instructions = instructions;
-
   }
   simulate() {
     let counter = 0;
@@ -180,10 +157,10 @@ class Program {
       counter++;
       clockCycle++;
       RSTable.updateStations();
-      console.log(`PC ${pc / 4} at clock cycle ${clockCycle}`)
+      console.log(`PC ${pc / 4} at clock cycle ${clockCycle}`);
       const instruction = this.instructions[pc / 4];
       if (instruction)
-        if ( RSTable.issue(instruction)) {
+        if (RSTable.issue(instruction)) {
           pc += 4;
         }
       if (counter > 200) {
@@ -194,9 +171,9 @@ class Program {
   }
 
   propgramFinished() {
-    const PC= pc/4 >= this.instructions.length 
-    const IS_FINISHED= RSTable.isFinished();
-    console.log("PC:",PC,IS_FINISHED);
+    const PC = pc / 4 >= this.instructions.length;
+    const IS_FINISHED = RSTable.isFinished();
+    console.log("PC:", PC, IS_FINISHED);
     return PC && IS_FINISHED;
   }
 }

@@ -1,9 +1,9 @@
-const OP_CODES={
+const OP_CODES = {
   ADD: 0,
   ADDI: 1,
   JAL: 0,
   RET: 1,
-}
+};
 
 class Instruction {
   constructor({
@@ -15,15 +15,13 @@ class Instruction {
     pc,
     label,
   }) {
-    
- 
     this.opCode = null; //to differentiate add/addi and jal/ret
-   
+
     this.op = InstructionType[type];
-    if(this.op === InstructionType.ADD_ADDI) {
-      this.opCode= OP_CODES[type];
-    } else if(this.op === InstructionType.JAL_RET) {
-      this.opCode= OP_CODES[type];
+    if (this.op === InstructionType.ADD_ADDI) {
+      this.opCode = OP_CODES[type];
+    } else if (this.op === InstructionType.JAL_RET) {
+      this.opCode = OP_CODES[type];
     }
 
     this.destinationRegister = destinationRegister;
@@ -43,9 +41,14 @@ class Instruction {
     this.executed = false;
     this.written = false;
   }
+
+  resetCycles() {
+    this.issueCycle = null;
+    this.executionEndCycle = null;
+    this.executionStartCycle = null;
+    this.writeCycle = null;
+  }
 }
-
-
 
 const InstructionType = {
   LW: "LW",
@@ -61,4 +64,3 @@ const InstructionType = {
   NEG: "NEG",
   NOR: "NOR",
 };
-
